@@ -5,15 +5,415 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HD Electronic Shop</title>
+    <title>KING Electronic Shop - Premium Products</title>
     <!-- google font -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,900&display=swap" rel="stylesheet">
     <!-- boxicons -->
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <!-- app css -->
     <link rel="stylesheet" href="./css/grid.css">
     <link rel="stylesheet" href="./css/app.css">
+    <style>
+        /* Additional product styles */
+        .product-card {
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            position: relative;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: #ff4757;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 2;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .product-badge.sale {
+            background: #ffa502;
+        }
+        
+        .product-badge.new {
+            background: #26de81;
+        }
+        
+        .product-badge.hot {
+            background: #ff6b81;
+        }
+        
+        .product-img {
+            position: relative;
+            overflow: hidden;
+            padding: 20px;
+            background: #f8f9fa;
+            text-align: center;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .product-img img {
+            max-width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+            transition: transform 0.5s ease;
+        }
+        
+        .product-card:hover .product-img img {
+            transform: scale(1.08);
+        }
+        
+        .product-img .hover-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .product-card:hover .product-img .hover-img {
+            opacity: 1;
+        }
+        
+        .product-info {
+            padding: 20px;
+            background: white;
+        }
+        
+        .product-category {
+            font-size: 13px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .product-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .product-name a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .product-name a:hover {
+            color: #2563eb;
+        }
+        
+        .product-rating {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .product-rating .stars {
+            color: #ffc107;
+            font-size: 14px;
+        }
+        
+        .product-rating .reviews {
+            color: #666;
+            font-size: 13px;
+        }
+        
+        .product-specs {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .spec-label {
+            color: #666;
+            font-weight: 400;
+        }
+        
+        .spec-value {
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .current-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2563eb;
+        }
+        
+        .old-price {
+            font-size: 16px;
+            color: #999;
+            text-decoration: line-through;
+        }
+        
+        .discount {
+            background: #ff4757;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .product-features {
+            margin-bottom: 15px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: #555;
+        }
+        
+        .feature-item i {
+            color: #26de81;
+            font-size: 14px;
+        }
+        
+        .product-stock {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .stock-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .stock-status.in-stock {
+            background: #e3fcef;
+            color: #0b5e42;
+        }
+        
+        .stock-status.low-stock {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .stock-status.out-of-stock {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-view {
+            flex: 1;
+            background: #f0f2f5;
+            color: #333;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .btn-view:hover {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .filter-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: block;
+            color: #333;
+        }
+        
+        .filter-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .filter-list li {
+            margin-bottom: 12px;
+        }
+        
+        .filter-list a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: block;
+            padding: 5px 0;
+        }
+        
+        .filter-list a:hover {
+            color: #2563eb;
+        }
+        
+        .group-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .group-checkbox input[type="checkbox"] {
+            display: none;
+        }
+        
+        .group-checkbox label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .group-checkbox label i {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .group-checkbox input[type="checkbox"]:checked + label i {
+            background: #2563eb;
+            border-color: #2563eb;
+            color: white;
+        }
+        
+        .price-range {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .price-range input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            list-style: none;
+            padding: 30px 0;
+        }
+        
+        .pagination li a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .pagination li a:hover,
+        .pagination li a.active {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .filter-toggle-box {
+            margin-bottom: 20px;
+        }
+        
+        #filter-toggle,
+        #filter-close {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            #filter-col {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 280px;
+                height: 100%;
+                background: white;
+                z-index: 1000;
+                overflow-y: auto;
+                transition: left 0.3s ease;
+                padding: 20px;
+            }
+            
+            #filter-col.active {
+                left: 0;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -22,7 +422,7 @@
     <header>
         <!-- mobile menu -->
         <div class="mobile-menu bg-second">
-            <a href="#" class="mb-logo">HD Electronic Shop</a>
+            <a href="#" class="mb-logo">👑 KING Electronic Shop</a>
             <span class="mb-menu-toggle" id="mb-menu-toggle">
                 <i class='bx bx-menu'></i>
             </span>
@@ -38,33 +438,33 @@
                 <div class="top-header container">
                     <ul class="devided">
                         <li>
-                            <a href="#">+84123456789</a>
+                            <a href="tel:0920605634"><i class='bx bx-phone'></i> 0920605634</a>
                         </li>
                         <li>
-                            <a href="#">HD_ElectronicShop@mail.com</a>
+                            <a href="mailto:KING_ElectronicShop@mail.com"><i class='bx bx-envelope'></i> KING_ElectronicShop@mail.com</a>
                         </li>
                     </ul>
                     <ul class="devided">
                         <li class="dropdown">
-                            <a href="">USD</a>
+                            <a href="javascript:void(0)"><i class='bx bx-dollar'></i> USD</a>
                             <i class='bx bxs-chevron-down'></i>
                             <ul class="dropdown-content">
-                                <li><a href="#">VND</a></li>
-                                <li><a href="#">JPY</a></li>
-                                <li><a href="#">EUR</a></li>
+                                <li><a href="#"><i class='bx bx-money'></i> VND</a></li>
+                                <li><a href="#"><i class='bx bx-money'></i> JPY</a></li>
+                                <li><a href="#"><i class='bx bx-money'></i> EUR</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
-                            <a href="">ENGLISH</a>
+                            <a href="javascript:void(0)"><i class='bx bx-globe'></i> ENGLISH</a>
                             <i class='bx bxs-chevron-down'></i>
                             <ul class="dropdown-content">
-                                <li><a href="#">VIETNAMESE</a></li>
-                                <li><a href="#">JAPANESE</a></li>
-                                <li><a href="#">FRENCH</a></li>
-                                <li><a href="#">SPANISH</a></li>
+                                <li><a href="#">🇻🇳 VIETNAMESE</a></li>
+                                <li><a href="#">🇯🇵 JAPANESE</a></li>
+                                <li><a href="#">🇫🇷 FRENCH</a></li>
+                                <li><a href="#">🇪🇸 SPANISH</a></li>
                             </ul>
                         </li>
-                        <li><a href="#">ORDER TRACKING</a></li>
+                        <li><a href="#"><i class='bx bx-package'></i> ORDER TRACKING</a></li>
                     </ul>
                 </div>
             </div>
@@ -72,17 +472,10 @@
             <!-- mid header -->
             <div class="bg-main">
                 <div class="mid-header container">
-                    <a href="#" class="logo">HD Electronic Shop</a>
+                    <a href="index.html" class="logo">👑 KING <span>Electronic</span> Shop</a>
                     <div class="search">
-                        <input type="text" placeholder="Search">
+                        <input type="text" placeholder="Search products...">
                         <i class='bx bx-search-alt'></i>
-                    </div>
-                    <div class="bg-icon">
-                        <ul class="user-menu">
-                            <li><a href="#"><i class='bx bx-bell'></i></a></li>
-                            <li><a href="login.html"><i class='bx bx-user-circle'></i></a></li>
-                            <li><a href="cartpage.html"><i class='bx bx-cart'></i></a></li>
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -91,53 +484,53 @@
             <div class="bg-second">
                 <div class="bottom-header container">
                     <ul class="main-menu">
-                        <li><a href="#">home</a></li>
+                        <li><a href="./index.html">home</a></li>
                         <!-- mega menu -->
                         <li class="mega-dropdown">
-                            <a href="./products.html">Shop<i class='bx bxs-chevron-down'></i></a>
+                            <a href="./products.html" class="active">Shop <i class='bx bxs-chevron-down'></i></a>
                             <div class="mega-content">
                                 <div class="row">
                                     <div class="col-3 col-md-12">
                                         <div class="box">
-                                            <h3>JBL Wireless HeadPhones</h3>
+                                            <h3>🎧 JBL HeadPhones</h3>
                                             <ul>
-                                                <li><a href="#">JBL Tune 510BT</a></li>
-                                                <li><a href="#">JBL TUNE 750BTNC </a></li>
-                                                <li><a href="#">JBL Quantum 400</a></li>
-                                                <li><a href="#">JBL JR 310BT</a></li>
+                                                <li><a href="#jbl-510bt">JBL Tune 510BT</a></li>
+                                                <li><a href="#jbl-750bt">JBL TUNE 750BTNC</a></li>
+                                                <li><a href="#jbl-quantum">JBL Quantum 400</a></li>
+                                                <li><a href="#jbl-jr">JBL JR 310BT</a></li>
                                             </ul>
                                         </div>
                                     </div>
                                     <div class="col-3 col-md-12">
                                         <div class="box">
-                                            <h3>SmartPhone</h3>
+                                            <h3>📱 SmartPhones</h3>
                                             <ul>
-                                                <li><a href="#">Iphone 14 Pro Max</a></li>
-                                                <li><a href="#">Iphone 14 Pro </a></li>
-                                                <li><a href="#">Iphone 14 </a></li>
-                                                <li><a href="#">Iphone X</a></li>
+                                                <li><a href="#iphone-14-pro-max">iPhone 14 Pro Max</a></li>
+                                                <li><a href="#iphone-14-pro">iPhone 14 Pro</a></li>
+                                                <li><a href="#iphone-14">iPhone 14</a></li>
+                                                <li><a href="#iphone-x">iPhone X</a></li>
                                             </ul>
                                         </div>
                                     </div>
                                     <div class="col-3 col-md-12">
                                         <div class="box">
-                                            <h3>LapTop</h3>
+                                            <h3>💻 Laptops</h3>
                                             <ul>
-                                                <li><a href="#">MacBook Air 12' 2023</a></li>
-                                                <li><a href="#">MacBook Air 13.3' 2023</a></li>
-                                                <li><a href="#">MacBook Pro 15' 2023</a></li>
-                                                <li><a href="#">MacBook Max 16' M2 2023 </a></li>
+                                                <li><a href="#macbook-air">MacBook Air 12' 2023</a></li>
+                                                <li><a href="#macbook-air-13">MacBook Air 13.3' 2023</a></li>
+                                                <li><a href="#macbook-pro-15">MacBook Pro 15' 2023</a></li>
+                                                <li><a href="#macbook-max">MacBook Max 16' M2</a></li>
                                             </ul>
                                         </div>
                                     </div>
                                     <div class="col-3 col-md-12">
                                         <div class="box">
-                                            <h3>JBL Wireless Earbuds</h3>
+                                            <h3>🎵 JBL Earbuds</h3>
                                             <ul>
-                                                <li><a href="#">JBL VIBE 100 TWS</a></li>
-                                                <li><a href="#">JBL Reflect Aero TWS</a></li>
-                                                <li><a href="#">JBL Live Pro TWS 2</a></li>
-                                                <li><a href="#">JBL Tune 220 TWS</a></li>
+                                                <li><a href="#jbl-vibe">JBL VIBE 100 TWS</a></li>
+                                                <li><a href="#jbl-reflect">JBL Reflect Aero</a></li>
+                                                <li><a href="#jbl-live">JBL Live Pro TWS 2</a></li>
+                                                <li><a href="#jbl-tune">JBL Tune 220 TWS</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -145,30 +538,30 @@
                                 <div class="row img-row">
                                     <div class="col-3">
                                         <div class="box">
-                                            <img src="./images/kisspng-beats-electronics-headphones-apple-beats-studio-red-headphones.png" alt="">
+                                            <img src="./images/kisspng-beats-electronics-headphones-apple-beats-studio-red-headphones.png" alt="Beats Headphones">
                                         </div>
                                     </div>
                                     <div class="col-3">
                                         <div class="box">
-                                            <img src="./images/14-p.png" alt="">
+                                            <img src="./images/14-p.png" alt="iPhone 14">
                                         </div>
                                     </div>
                                     <div class="col-3">
                                         <div class="box">
-                                            <img src="./images/mac-1.png" alt="">
+                                            <img src="./images/mac-1.png" alt="MacBook">
                                         </div>
                                     </div>
                                     <div class="col-3">
                                         <div class="box">
-                                            <img src="./images/JBL_TUNE220TWS_ProductImage_Pink_ChargingCaseOpen.png" alt="">
+                                            <img src="./images/JBL_TUNE220TWS_ProductImage_Pink_ChargingCaseOpen.png" alt="JBL Earbuds">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </li>
                         <!-- end mega menu -->
-                        <li><a href="#">blog</a></li>
-                        <li><a href="#">contact</a></li>
+                        <li><a href="#blog">blog</a></li>
+                        <li><a href="#contact">contact</a></li>
                     </ul>
                 </div>
             </div>
@@ -190,73 +583,97 @@
             </div>
             <div class="box">
                 <div class="row">
+                    <!-- Filter Sidebar -->
                     <div class="col-3 filter-col" id="filter-col">
                         <div class="box filter-toggle-box">
-                            <button class="btn-flat btn-hover" id="filter-close">close</button>
+                            <button class="btn-flat btn-hover" id="filter-close">✕ close</button>
                         </div>
-                        <div class="box">
+                        
+                        <!-- Categories -->
+                        <div class="box" data-aos="fade-right">
                             <span class="filter-header">
-                                Products
+                                📋 Categories
                             </span>
-                        <div class="filter-list">
-                            <ul class="filter-list">
-                                <li><a href="#">Iphone</a></li>
-                                <li><a href="#">Macbook</a></li>
-                                <li><a href="#">JBL Wireless HeadPhones</a></li>
-                                <li><a href="#">JBL Wireless Earbuds</a></li>
-                            </ul>
-                        </div>
-                        </div>
-                        <div class="box">
-                            <span class="filter-header">
-                                Price
-                            </span>
-                            <div class="price-range">
-                                <input type="text">
-                                <span>-</span>
-                                <input type="text">
+                            <div class="filter-list">
+                                <ul class="filter-list">
+                                    <li><a href="#smartphones">📱 Smartphones (12)</a></li>
+                                    <li><a href="#laptops">💻 Laptops (8)</a></li>
+                                    <li><a href="#headphones">🎧 Headphones (15)</a></li>
+                                    <li><a href="#earbuds">🎵 Earbuds (10)</a></li>
+                                    <li><a href="#tablets">📟 Tablets (6)</a></li>
+                                    <li><a href="#accessories">⌚ Accessories (20)</a></li>
+                                </ul>
                             </div>
                         </div>
-                        <div class="box">
+                        
+                        <!-- Price Range -->
+                        <div class="box" data-aos="fade-right" data-aos-delay="100">
+                            <span class="filter-header">
+                                💰 Price Range
+                            </span>
+                            <div class="price-range">
+                                <input type="text" placeholder="Min" id="min-price">
+                                <span>-</span>
+                                <input type="text" placeholder="Max" id="max-price">
+                            </div>
+                            <button class="btn-view" style="margin-top: 10px;">Apply</button>
+                        </div>
+                        
+                        <!-- Availability -->
+                        <div class="box" data-aos="fade-right" data-aos-delay="200">
+                            <span class="filter-header">
+                                📦 Availability
+                            </span>
                             <ul class="filter-list">
                                 <li>
                                     <div class="group-checkbox">
-                                        <input type="checkbox" id="status1">
-                                        <label for="status1">
-                                            On sale
+                                        <input type="checkbox" id="in-stock">
+                                        <label for="in-stock">
+                                            In Stock
                                             <i class='bx bx-check'></i>
                                         </label>
                                     </div>
                                 </li>
                                 <li>
                                     <div class="group-checkbox">
-                                        <input type="checkbox" id="status2">
-                                        <label for="status2">
-                                            In stock
+                                        <input type="checkbox" id="pre-order">
+                                        <label for="pre-order">
+                                            Pre-Order
                                             <i class='bx bx-check'></i>
                                         </label>
                                     </div>
                                 </li>
                                 <li>
                                     <div class="group-checkbox">
-                                        <input type="checkbox" id="status3">
-                                        <label for="status3">
-                                            Featured
+                                        <input type="checkbox" id="out-of-stock">
+                                        <label for="out-of-stock">
+                                            Out of Stock
                                             <i class='bx bx-check'></i>
                                         </label>
                                     </div>
                                 </li>
                             </ul>
                         </div>
-                        <div class="box">
+                        
+                        <!-- Brands -->
+                        <div class="box" data-aos="fade-right" data-aos-delay="300">
                             <span class="filter-header">
-                                Brands
+                                🏷️ Brands
                             </span>
                             <ul class="filter-list">
                                 <li>
                                     <div class="group-checkbox">
-                                        <input type="checkbox" id="remember1" checked="checked">
-                                        <label for="remember1">
+                                        <input type="checkbox" id="brand-apple" checked>
+                                        <label for="brand-apple">
+                                            Apple
+                                            <i class='bx bx-check'></i>
+                                        </label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="group-checkbox">
+                                        <input type="checkbox" id="brand-jbl">
+                                        <label for="brand-jbl">
                                             JBL
                                             <i class='bx bx-check'></i>
                                         </label>
@@ -264,51 +681,45 @@
                                 </li>
                                 <li>
                                     <div class="group-checkbox">
-                                        <input type="checkbox" id="remember2">
-                                        <label for="remember2">
-                                            Beat
+                                        <input type="checkbox" id="brand-samsung">
+                                        <label for="brand-samsung">
+                                            Samsung
                                             <i class='bx bx-check'></i>
                                         </label>
                                     </div>
                                 </li>
                                 <li>
                                     <div class="group-checkbox">
-                                        <input type="checkbox" id="remember3">
-                                        <label for="remember3">
-                                            Iphone
+                                        <input type="checkbox" id="brand-sony">
+                                        <label for="brand-sony">
+                                            Sony
                                             <i class='bx bx-check'></i>
                                         </label>
                                     </div>
                                 </li>
                                 <li>
                                     <div class="group-checkbox">
-                                        <input type="checkbox" id="remember4">
-                                        <label for="remember4">
-                                            Macbook
+                                        <input type="checkbox" id="brand-beats">
+                                        <label for="brand-beats">
+                                            Beats
                                             <i class='bx bx-check'></i>
                                         </label>
                                     </div>
                                 </li>
                             </ul>
                         </div>
-                        <div class="box">
+                        
+                        <!-- Color -->
+                        <div class="box" data-aos="fade-right" data-aos-delay="400">
                             <span class="filter-header">
-                                Color
+                                🎨 Color
                             </span>
                             <ul class="filter-list">
                                 <li>
                                     <div class="group-checkbox">
-                                        <input type="checkbox" id="remember5" checked="checked">
-                                        <label for="remember5">
-                                            White
-                                            <i class='bx bx-check'></i>
-                                        </label>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="group-checkbox">
-                                        <input type="checkbox" id="remember6">
-                                        <label for="remember6">
+                                        <input type="checkbox" id="color-black" checked>
+                                        <label for="color-black">
+                                            <span style="display:inline-block; width:15px; height:15px; background:#000; border-radius:3px;"></span>
                                             Black
                                             <i class='bx bx-check'></i>
                                         </label>
@@ -316,42 +727,57 @@
                                 </li>
                                 <li>
                                     <div class="group-checkbox">
-                                        <input type="checkbox" id="remember7">
-                                        <label for="remember7">
-                                            Yellow
+                                        <input type="checkbox" id="color-white">
+                                        <label for="color-white">
+                                            <span style="display:inline-block; width:15px; height:15px; background:#fff; border:1px solid #ddd; border-radius:3px;"></span>
+                                            White
                                             <i class='bx bx-check'></i>
                                         </label>
                                     </div>
                                 </li>
                                 <li>
                                     <div class="group-checkbox">
-                                        <input type="checkbox" id="remember8">
-                                        <label for="remember8">
-                                            Red
+                                        <input type="checkbox" id="color-silver">
+                                        <label for="color-silver">
+                                            <span style="display:inline-block; width:15px; height:15px; background:#c0c0c0; border-radius:3px;"></span>
+                                            Silver
                                             <i class='bx bx-check'></i>
                                         </label>
                                     </div>
                                 </li>
                                 <li>
                                     <div class="group-checkbox">
-                                        <input type="checkbox" id="remember9">
-                                        <label for="remember9">
-                                            Pink
+                                        <input type="checkbox" id="color-gold">
+                                        <label for="color-gold">
+                                            <span style="display:inline-block; width:15px; height:15px; background:#ffd700; border-radius:3px;"></span>
+                                            Gold
+                                            <i class='bx bx-check'></i>
+                                        </label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="group-checkbox">
+                                        <input type="checkbox" id="color-blue">
+                                        <label for="color-blue">
+                                            <span style="display:inline-block; width:15px; height:15px; background:#2563eb; border-radius:3px;"></span>
+                                            Blue
                                             <i class='bx bx-check'></i>
                                         </label>
                                     </div>
                                 </li>
                             </ul>
                         </div>
-                        <div class="box">
+                        
+                        <!-- Rating -->
+                        <div class="box" data-aos="fade-right" data-aos-delay="500">
                             <span class="filter-header">
-                                rating
+                                ⭐ Customer Rating
                             </span>
                             <ul class="filter-list">
                                 <li>
                                     <div class="group-checkbox">
-                                        <input type="checkbox" id="remember10">
-                                        <label for="remember10">
+                                        <input type="checkbox" id="rating-5">
+                                        <label for="rating-5">
                                             <span class="rating">
                                                 <i class='bx bxs-star'></i>
                                                 <i class='bx bxs-star'></i>
@@ -365,8 +791,8 @@
                                 </li>
                                 <li>
                                     <div class="group-checkbox">
-                                        <input type="checkbox" id="remember11">
-                                        <label for="remember11">
+                                        <input type="checkbox" id="rating-4">
+                                        <label for="rating-4">
                                             <span class="rating">
                                                 <i class='bx bxs-star'></i>
                                                 <i class='bx bxs-star'></i>
@@ -380,42 +806,12 @@
                                 </li>
                                 <li>
                                     <div class="group-checkbox">
-                                        <input type="checkbox" id="remember12">
-                                        <label for="remember12">
+                                        <input type="checkbox" id="rating-3">
+                                        <label for="rating-3">
                                             <span class="rating">
                                                 <i class='bx bxs-star'></i>
                                                 <i class='bx bxs-star'></i>
                                                 <i class='bx bxs-star'></i>
-                                                <i class='bx bx-star'></i>
-                                                <i class='bx bx-star'></i>
-                                            </span>
-                                            <i class='bx bx-check'></i>
-                                        </label>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="group-checkbox">
-                                        <input type="checkbox" id="remember13">
-                                        <label for="remember13">
-                                            <span class="rating">
-                                                <i class='bx bxs-star'></i>
-                                                <i class='bx bxs-star'></i>
-                                                <i class='bx bx-star'></i>
-                                                <i class='bx bx-star'></i>
-                                                <i class='bx bx-star'></i>
-                                            </span>
-                                            <i class='bx bx-check'></i>
-                                        </label>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="group-checkbox">
-                                        <input type="checkbox" id="remember14">
-                                        <label for="remember14">
-                                            <span class="rating">
-                                                <i class='bx bxs-star'></i>
-                                                <i class='bx bx-star'></i>
-                                                <i class='bx bx-star'></i>
                                                 <i class='bx bx-star'></i>
                                                 <i class='bx bx-star'></i>
                                             </span>
@@ -426,13 +822,493 @@
                             </ul>
                         </div>
                     </div>
+                    
+                    <!-- Products Grid -->
                     <div class="col-9 col-md-12">
                         <div class="box filter-toggle-box">
-                            <button class="btn-flat btn-hover" id="filter-toggle">filter</button>
+                            <button class="btn-flat btn-hover" id="filter-toggle">🔍 Show Filters</button>
                         </div>
+                        
+                        <!-- Products Count and Sort -->
+                        <div class="box" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                            <p><strong>Showing 1-12</strong> of 45 products</p>
+                            <select style="padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
+                                <option>Sort by: Latest</option>
+                                <option>Price: Low to High</option>
+                                <option>Price: High to Low</option>
+                                <option>Best Rating</option>
+                                <option>Most Popular</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Products Grid -->
                         <div class="box">
-                            <div class="row" id="products"></div>
+                            <div class="row" id="products">
+                                <!-- iPhone 14 Pro Max -->
+                                <div class="col-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="100">
+                                    <div class="product-card">
+                                        <div class="product-badge new">New</div>
+                                        <div class="product-img">
+                                            <img src="./images/14-1.png" alt="iPhone 14 Pro Max">
+                                            <div class="hover-img">
+                                                <img src="./images/14-p.png" alt="iPhone 14 Pro Max">
+                                            </div>
+                                        </div>
+                                        <div class="product-info">
+                                            <div class="product-category">Smartphones</div>
+                                            <h3 class="product-name"><a href="product-detail.html">iPhone 14 Pro Max</a></h3>
+                                            
+                                            <div class="product-rating">
+                                                <span class="stars">
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                </span>
+                                                <span class="reviews">(245 reviews)</span>
+                                            </div>
+                                            
+                                            <div class="product-specs">
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Display:</span>
+                                                    <span class="spec-value">6.7" Super Retina XDR</span>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Processor:</span>
+                                                    <span class="spec-value">A16 Bionic</span>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Camera:</span>
+                                                    <span class="spec-value">48MP + 12MP + 12MP</span>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Battery:</span>
+                                                    <span class="spec-value">4323 mAh</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="product-price">
+                                                <span class="current-price">ETB:1,199</span>
+                                                <span class="old-price">ETB:1,399</span>
+                                                <span class="discount">-14%</span>
+                                            </div>
+                                            
+                                            <div class="product-features">
+                                                <div class="feature-item">
+                                                    <i class='bx bx-check-circle'></i>
+                                                    <span>5G Ready</span>
+                                                </div>
+                                                <div class="feature-item">
+                                                    <i class='bx bx-check-circle'></i>
+                                                    <span>Face ID</span>
+                                                </div>
+                                                <div class="feature-item">
+                                                    <i class='bx bx-check-circle'></i>
+                                                    <span>IP68 Water Resistant</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="product-stock">
+                                                <span class="stock-status in-stock">In Stock</span>
+                                                <span>Free Shipping</span>
+                                            </div>
+                                            
+                                            <div class="product-actions">
+                                                <a href="product-detail.html" class="btn-view">View Details</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- iPhone 14 Pro -->
+                                <div class="col-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="200">
+                                    <div class="product-card">
+                                        <div class="product-badge sale">Sale</div>
+                                        <div class="product-img">
+                                            <img src="./images/14-p.png" alt="iPhone 14 Pro">
+                                            <div class="hover-img">
+                                                <img src="./images/14-1.png" alt="iPhone 14 Pro">
+                                            </div>
+                                        </div>
+                                        <div class="product-info">
+                                            <div class="product-category">Smartphones</div>
+                                            <h3 class="product-name"><a href="product-detail.html">iPhone 14 Pro</a></h3>
+                                            
+                                            <div class="product-rating">
+                                                <span class="stars">
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star-half'></i>
+                                                </span>
+                                                <span class="reviews">(189 reviews)</span>
+                                            </div>
+                                            
+                                            <div class="product-specs">
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Display:</span>
+                                                    <span class="spec-value">6.1" Super Retina XDR</span>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Processor:</span>
+                                                    <span class="spec-value">A16 Bionic</span>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Camera:</span>
+                                                    <span class="spec-value">48MP + 12MP + 12MP</span>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Battery:</span>
+                                                    <span class="spec-value">3200 mAh</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="product-price">
+                                                <span class="current-price">ETB:999</span>
+                                                <span class="old-price">ETB:1,099</span>
+                                                <span class="discount">-9%</span>
+                                            </div>
+                                            
+                                            <div class="product-features">
+                                                <div class="feature-item">
+                                                    <i class='bx bx-check-circle'></i>
+                                                    <span>5G Ready</span>
+                                                </div>
+                                                <div class="feature-item">
+                                                    <i class='bx bx-check-circle'></i>
+                                                    <span>Dynamic Island</span>
+                                                </div>
+                                                <div class="feature-item">
+                                                    <i class='bx bx-check-circle'></i>
+                                                    <span>Always-On Display</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="product-stock">
+                                                <span class="stock-status in-stock">In Stock</span>
+                                                <span>Free Shipping</span>
+                                            </div>
+                                            
+                                            <div class="product-actions">
+                                                <a href="product-detail.html" class="btn-view">View Details</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- MacBook Pro -->
+                                <div class="col-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="product-card">
+                                        <div class="product-badge hot">Hot</div>
+                                        <div class="product-img">
+                                            <img src="./images/mac-1.png" alt="MacBook Pro">
+                                            <div class="hover-img">
+                                                <img src="./images/macAir.png" alt="MacBook Pro">
+                                            </div>
+                                        </div>
+                                        <div class="product-info">
+                                            <div class="product-category">Laptops</div>
+                                            <h3 class="product-name"><a href="product-detail.html">MacBook Pro 14" M3</a></h3>
+                                            
+                                            <div class="product-rating">
+                                                <span class="stars">
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                </span>
+                                                <span class="reviews">(156 reviews)</span>
+                                            </div>
+                                            
+                                            <div class="product-specs">
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Display:</span>
+                                                    <span class="spec-value">14.2" Liquid Retina XDR</span>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Processor:</span>
+                                                    <span class="spec-value">Apple M3 Pro</span>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <span class="spec-label">RAM:</span>
+                                                    <span class="spec-value">16GB Unified</span>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Storage:</span>
+                                                    <span class="spec-value">512GB SSD</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="product-price">
+                                                <span class="current-price">ETB:1,999</span>
+                                                <span class="old-price">ETB:2,199</span>
+                                                <span class="discount">-9%</span>
+                                            </div>
+                                            
+                                            <div class="product-features">
+                                                <div class="feature-item">
+                                                    <i class='bx bx-check-circle'></i>
+                                                    <span>Up to 18hrs Battery</span>
+                                                </div>
+                                                <div class="feature-item">
+                                                    <i class='bx bx-check-circle'></i>
+                                                    <span>Touch ID</span>
+                                                </div>
+                                                <div class="feature-item">
+                                                    <i class='bx bx-check-circle'></i>
+                                                    <span>3x Thunderbolt 4</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="product-stock">
+                                                <span class="stock-status low-stock">Low Stock</span>
+                                                <span>Free Shipping</span>
+                                            </div>
+                                            
+                                            <div class="product-actions">
+                                                <a href="product-detail.html" class="btn-view">View Details</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- JBL Quantum 400 -->
+                                <div class="col-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="400">
+                                    <div class="product-card">
+                                        <div class="product-badge">Best Seller</div>
+                                        <div class="product-img">
+                                            <img src="./images/JBL_Quantum_400_Product Image_Hero 02.png" alt="JBL Quantum 400">
+                                            <div class="hover-img">
+                                                <img src="./images/JBL_Quantum_400_Product Image_Hero Mic Up.webp" alt="JBL Quantum 400">
+                                            </div>
+                                        </div>
+                                        <div class="product-info">
+                                            <div class="product-category">Gaming Headphones</div>
+                                            <h3 class="product-name"><a href="product-detail.html">JBL Quantum 400</a></h3>
+                                            
+                                            <div class="product-rating">
+                                                <span class="stars">
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star-half'></i>
+                                                </span>
+                                                <span class="reviews">(324 reviews)</span>
+                                            </div>
+                                            
+                                            <div class="product-specs">
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Type:</span>
+                                                    <span class="spec-value">Over-Ear Gaming</span>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Frequency:</span>
+                                                    <span class="spec-value">20Hz - 20kHz</span>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Connectivity:</span>
+                                                    <span class="spec-value">Wired + Wireless</span>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Battery:</span>
+                                                    <span class="spec-value">22 hours</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="product-price">
+                                                <span class="current-price">ETB:149</span>
+                                                <span class="old-price">ETB:199</span>
+                                                <span class="discount">-25%</span>
+                                            </div>
+                                            
+                                            <div class="product-features">
+                                                <div class="feature-item">
+                                                    <i class='bx bx-check-circle'></i>
+                                                    <span>JBL QuantumSOUND</span>
+                                                </div>
+                                                <div class="feature-item">
+                                                    <i class='bx bx-check-circle'></i>
+                                                    <span>Detachable Mic</span>
+                                                </div>
+                                                <div class="feature-item">
+                                                    <i class='bx bx-check-circle'></i>
+                                                    <span>RGB Lighting</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="product-stock">
+                                                <span class="stock-status in-stock">In Stock</span>
+                                                <span>Free Shipping</span>
+                                            </div>
+                                            
+                                            <div class="product-actions">
+                                                <a href="product-detail.html" class="btn-view">View Details</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- MacBook Air -->
+                                <div class="col-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="500">
+                                    <div class="product-card">
+                                        <div class="product-badge new">New</div>
+                                        <div class="product-img">
+                                            <img src="./images/macAir.png" alt="MacBook Air">
+                                            <div class="hover-img">
+                                                <img src="./images/mac-1.png" alt="MacBook Air">
+                                            </div>
+                                        </div>
+                                        <div class="product-info">
+                                            <div class="product-category">Laptops</div>
+                                            <h3 class="product-name"><a href="product-detail.html">MacBook Air 15" M2</a></h3>
+                                            
+                                            <div class="product-rating">
+                                                <span class="stars">
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                </span>
+                                                <span class="reviews">(98 reviews)</span>
+                                            </div>
+                                            
+                                            <div class="product-specs">
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Display:</span>
+                                                    <span class="spec-value">15.3" Liquid Retina</span>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Processor:</span>
+                                                    <span class="spec-value">Apple M2</span>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <span class="spec-label">RAM:</span>
+                                                    <span class="spec-value">8GB Unified</span>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Storage:</span>
+                                                    <span class="spec-value">256GB SSD</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="product-price">
+                                                <span class="current-price">ETB:1,299</span>
+                                                <span class="old-price">ETB:1,399</span>
+                                                <span class="discount">-7%</span>
+                                            </div>
+                                            
+                                            <div class="product-features">
+                                                <div class="feature-item">
+                                                    <i class='bx bx-check-circle'></i>
+                                                    <span>MagSafe Charging</span>
+                                                </div>
+                                                <div class="feature-item">
+                                                    <i class='bx bx-check-circle'></i>
+                                                    <span>Touch ID</span>
+                                                </div>
+                                                <div class="feature-item">
+                                                    <i class='bx bx-check-circle'></i>
+                                                    <span>1080p Camera</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="product-stock">
+                                                <span class="stock-status in-stock">In Stock</span>
+                                                <span>Free Shipping</span>
+                                            </div>
+                                            
+                                            <div class="product-actions">
+                                                <a href="product-detail.html" class="btn-view">View Details</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- JBL Tune 220TWS -->
+                                <div class="col-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="600">
+                                    <div class="product-card">
+                                        <div class="product-badge sale">-20%</div>
+                                        <div class="product-img">
+                                            <img src="./images/JBL_TUNE220TWS_ProductImage_Pink_ChargingCaseOpen.png" alt="JBL Tune 220TWS">
+                                            <div class="hover-img">
+                                                <img src="./images/JBL_JR 310BT_Product Image_Hero_Skyblue.png" alt="JBL Tune 220TWS">
+                                            </div>
+                                        </div>
+                                        <div class="product-info">
+                                            <div class="product-category">Wireless Earbuds</div>
+                                            <h3 class="product-name"><a href="product-detail.html">JBL Tune 220TWS</a></h3>
+                                            
+                                            <div class="product-rating">
+                                                <span class="stars">
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bx-star'></i>
+                                                </span>
+                                                <span class="reviews">(412 reviews)</span>
+                                            </div>
+                                            
+                                            <div class="product-specs">
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Type:</span>
+                                                    <span class="spec-value">True Wireless</span>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Battery:</span>
+                                                    <span class="spec-value">25hrs (with case)</span>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Bluetooth:</span>
+                                                    <span class="spec-value">5.0</span>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <span class="spec-label">Water Resistant:</span>
+                                                    <span class="spec-value">IPX4</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="product-price">
+                                                <span class="current-price">ETB:79</span>
+                                                <span class="old-price">ETB:99</span>
+                                                <span class="discount">-20%</span>
+                                            </div>
+                                            
+                                            <div class="product-features">
+                                                <div class="feature-item">
+                                                    <i class='bx bx-check-circle'></i>
+                                                    <span>Pure Bass Sound</span>
+                                                </div>
+                                                <div class="feature-item">
+                                                    <i class='bx bx-check-circle'></i>
+                                                    <span>Quick Charging</span>
+                                                </div>
+                                                <div class="feature-item">
+                                                    <i class='bx bx-check-circle'></i>
+                                                    <span>Hands-Free Calls</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="product-stock">
+                                                <span class="stock-status in-stock">In Stock</span>
+                                                <span>Free Shipping</span>
+                                            </div>
+                                            
+                                            <div class="product-actions">
+                                                <a href="product-detail.html" class="btn-view">View Details</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        
+                        <!-- Pagination -->
                         <div class="box">
                             <ul class="pagination">
                                 <li><a href="#"><i class='bx bxs-chevron-left'></i></a></li>
@@ -456,74 +1332,126 @@
         <div class="container">
             <div class="row">
                 <div class="col-3 col-md-6">
-                    <h3 class="footer-head">Products</h3>
+                    <h3 class="footer-head">📱 Products</h3>
                     <ul class="menu">
-                        <li><a href="#">Website Builder</a></li>
-                        <li><a href="#">Online store</a></li>
-                        <li><a href="#">Features</a></li>
-                        <li><a href="#">Pricing</a></li>
-                        <li><a href="#">Shop Pay</a></li>
+                        <li><a href="#"><i class='bx bx-chevron-right'></i> Smartphones</a></li>
+                        <li><a href="#"><i class='bx bx-chevron-right'></i> Laptops</a></li>
+                        <li><a href="#"><i class='bx bx-chevron-right'></i> Headphones</a></li>
+                        <li><a href="#"><i class='bx bx-chevron-right'></i> Accessories</a></li>
+                        <li><a href="#"><i class='bx bx-chevron-right'></i> New Arrivals</a></li>
                     </ul>
                 </div>
                 <div class="col-3 col-md-6">
-                    <h3 class="footer-head">general policy</h3>
+                    <h3 class="footer-head">📋 Policies</h3>
                     <ul class="menu">
-                        <li><a href="#">Shipping policy</a></li>
-                        <li><a href="#">Warranty Policy</a></li>
-                        <li><a href="#">Policy for business</a></li>
-                        <li><a href="#">Checking policy</a></li>
-                        <li><a href="#">Customer information security</a></li>
+                        <li><a href="#"><i class='bx bx-chevron-right'></i> Shipping Policy</a></li>
+                        <li><a href="#"><i class='bx bx-chevron-right'></i> Warranty Policy</a></li>
+                        <li><a href="#"><i class='bx bx-chevron-right'></i> Return Policy</a></li>
+                        <li><a href="#"><i class='bx bx-chevron-right'></i> Privacy Policy</a></li>
+                        <li><a href="#"><i class='bx bx-chevron-right'></i> Terms of Service</a></li>
                     </ul>
                 </div>
                 <div class="col-3 col-md-6">
-                    <h3 class="footer-head">support</h3>
+                    <h3 class="footer-head">🛠️ Support</h3>
                     <ul class="menu">
-                        <li><a href="#">24/7 support</a></li>
-                        <li><a href="#">Online Shopping Guide</a></li>
-                        <li><a href="#">Payment Guide</a></li>
-                        <li><a href="#">Installment purchase guide</a></li>
-                        <li><a href="#">Print e-invoices</a></li>
-                        <li><a href="#">Warranty lookup</a></li>
+                        <li><a href="#"><i class='bx bx-chevron-right'></i> 24/7 Support</a></li>
+                        <li><a href="#"><i class='bx bx-chevron-right'></i> FAQs</a></li>
+                        <li><a href="#"><i class='bx bx-chevron-right'></i> Product Registration</a></li>
+                        <li><a href="#"><i class='bx bx-chevron-right'></i> Warranty Check</a></li>
+                        <li><a href="#"><i class='bx bx-chevron-right'></i> Service Centers</a></li>
                     </ul>
                 </div>
                 <div class="col-3 col-md-6 col-sm-12">
                     <div class="contact">
                         <h3 class="contact-header">
-                            HD Electronic Shop
+                            👑 KING Electronic Shop
                         </h3>
+                        <p><i class='bx bx-map'></i> 123 Tech Street, Digital City</p>
+                        <p><i class='bx bx-phone'></i> 0920605634</p>
+                        <p><i class='bx bx-envelope'></i> KING_ElectronicShop@mail.com</p>
                         <ul class="contact-socials">
-                            <li><a href="#">
-                                    <i class='bx bxl-facebook-circle'></i>
-                                </a></li>
-                            <li><a href="#">
-                                    <i class='bx bxl-instagram-alt'></i>
-                                </a></li>
-                            <li><a href="#">
-                                    <i class='bx bxl-youtube'></i>
-                                </a></li>
-                            <li><a href="#">
-                                    <i class='bx bxl-twitter'></i>
-                                </a></li>
+                            <li><a href="#" aria-label="Facebook"><i class='bx bxl-facebook-circle'></i></a></li>
+                            <li><a href="#" aria-label="Instagram"><i class='bx bxl-instagram-alt'></i></a></li>
+                            <li><a href="#" aria-label="YouTube"><i class='bx bxl-youtube'></i></a></li>
+                            <li><a href="#" aria-label="Twitter"><i class='bx bxl-twitter'></i></a></li>
+                            <li><a href="#" aria-label="TikTok"><i class='bx bxl-tiktok'></i></a></li>
                         </ul>
                     </div>
                     <div class="subscribe">
-                        <input type="email" placeholder="ENTER YOUR EMAIL">
-                        <button>subscribe</button>
+                        <input type="email" placeholder="📧 Enter your email">
+                        <button>Subscribe</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="footer">
-            <p>
-            Designed and founded by Hoang le thanh duc © 2023
-            </p>
+        <div class="footer-bottom">
+            <div class="container">
+                <p class="copyright">
+                    <i class='bx bx-copyright'></i> 2023 KING Electronic Shop. All rights reserved. Designed with ❤️
+                </p>
+            </div>
         </div>
     </footer>
     <!-- end footer -->
 
+    <!-- AOS Animation -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <!-- app js -->
     <script src="./js/app.js"></script>
     <script src="./js/products.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 50
+        });
+
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('mb-menu-toggle');
+            const menuClose = document.getElementById('mb-menu-close');
+            const headerWrapper = document.getElementById('header-wrapper');
+
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function() {
+                    headerWrapper.classList.add('active');
+                });
+            }
+
+            if (menuClose) {
+                menuClose.addEventListener('click', function() {
+                    headerWrapper.classList.remove('active');
+                });
+            }
+
+            // Filter toggle for mobile
+            const filterToggle = document.getElementById('filter-toggle');
+            const filterClose = document.getElementById('filter-close');
+            const filterCol = document.getElementById('filter-col');
+
+            if (filterToggle) {
+                filterToggle.addEventListener('click', function() {
+                    filterCol.classList.add('active');
+                });
+            }
+
+            if (filterClose) {
+                filterClose.addEventListener('click', function() {
+                    filterCol.classList.remove('active');
+                });
+            }
+
+            // Close filter when clicking outside
+            document.addEventListener('click', function(event) {
+                if (filterCol && filterCol.classList.contains('active')) {
+                    if (!filterCol.contains(event.target) && event.target !== filterToggle) {
+                        filterCol.classList.remove('active');
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
